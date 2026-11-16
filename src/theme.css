@@ -1,0 +1,419 @@
+/* TunnelWeb theme: colours from background.png (aqua → mint → pale mint);
+   pill buttons and orbs are pure-CSS copies of the artwork in src/assets. Base styles
+   for native form controls live here; window chrome is in
+   components/common/WindowFrame.svelte. */
+
+:root {
+  --aqua: #00dedd;
+  --aqua-deep: #00a9b5;
+  --mint: #45e2b8;
+  --mint-pale: #e3f9e7;
+  --orb-blue: #1e90ff;
+  --orb-green: #2db82d;
+  --orb-red: #e53935;
+  --orb-amber: #f5a623;
+  --orb-grey: #9aa5ad;
+  --ink: #0b3b4a;
+  --ink-soft: #4d7480;
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-strong: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --radius: 10px;
+  --field-border: rgba(0, 120, 130, 0.35);
+  --focus-glow: 0 0 0 3px rgba(0, 222, 221, 0.3);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--aqua) url('./assets/background.png') center / cover no-repeat fixed;
+  color: var(--ink);
+  font: 9pt 'Segoe UI', 'Noto Sans', sans-serif;
+  overflow: hidden;
+}
+
+/* ---- Form controls ------------------------------------------------------ */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--ink);
+}
+
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+
+input:not([type='checkbox'], [type='radio'], [type='color'], [type='file']),
+select,
+textarea {
+  padding: 4px 8px;
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  background: linear-gradient(#f3fbfa, #fff 6px);
+  box-shadow: inset 0 1px 2px rgba(0, 80, 90, 0.12);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--aqua-deep);
+  box-shadow: var(--focus-glow), inset 0 1px 2px rgba(0, 80, 90, 0.12);
+}
+::placeholder {
+  color: #8aa9b0;
+}
+select {
+  padding-right: 22px;
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%) right 11px center / 5px 5px no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--ink-soft) 50%) right 6px center / 5px 5px no-repeat,
+    linear-gradient(#fff 45%, #eefbf7);
+}
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--aqua-deep);
+}
+
+/* Labelled form field: label above input */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+/* Collapsible groups */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary::before {
+  content: '';
+  display: inline-block;
+  margin: 0 6px 1px 2px;
+  border: 4px solid transparent;
+  border-left: 5px solid var(--aqua-deep);
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg) translateX(2px);
+}
+
+/* Progress bar: glossy track with a green orb-style fill */
+[role='progressbar'] {
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--field-border);
+  background: linear-gradient(#e9f4f2, #fff);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+[role='progressbar'] > div {
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.1) 50%, transparent 51%),
+    linear-gradient(90deg, var(--mint), var(--orb-green));
+  transition: width 0.25s;
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 150, 160, 0.45) transparent;
+}
+
+/* ---- Glass panel helper -------------------------------------------------- */
+
+.glass-panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 6px rgba(0, 90, 100, 0.15), inset 0 1px 0 #fff;
+  backdrop-filter: blur(6px);
+}
+
+/* ---- Universal pill button ------------------------------------------------
+   A pure-CSS copy of the pill artwork (bluepill.png and friends), sampled from
+   the images: a dark rim at the top, a white highlight fading into the base
+   colour by ~43% of the height, then a glow that brightens towards a light rim
+   at the bottom. Works on <button> and <a>, at any size (set --h) and in any
+   colour (set the five colour variables).
+     .btn              grey (default)
+     .btn.blue         primary
+     .btn.green        positive (accept, answer)
+     .btn.orange       negative (decline) / warnings
+   New colour: .btn.purple { --rim-top: …; --base: …; --glow: …; --rim-bottom: …; } */
+.btn {
+  --h: 28px;
+  /* grey (greypill.png) */
+  --rim-top: #c4c1be;
+  --hi: #fefefe;
+  --base: #d2d0ce;
+  --glow: #f2f1f0;
+  --rim-bottom: #e5e3e0;
+  --text: var(--ink);
+  --text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--h);
+  min-width: 0;
+  padding: 0 calc(var(--h) / 2 + 4px);
+  border: max(1px, calc(var(--h) * 0.04)) solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, var(--hi) 2%, var(--base) 43%, var(--base) 48%, var(--glow) 96%) padding-box,
+    linear-gradient(180deg, var(--rim-top), var(--base) 50%, var(--rim-bottom)) border-box;
+  box-shadow: 0 1px 2px rgba(0, 40, 60, 0.25);
+  color: var(--text);
+  text-shadow: var(--text-shadow);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    filter 0.15s,
+    box-shadow 0.15s;
+}
+.btn.blue {
+  /* bluepill.png */
+  --rim-top: #0077ff;
+  --hi: #fbfdff;
+  --base: #009bff;
+  --glow: #75e1ff;
+  --rim-bottom: #00c8ff;
+  --text: #fff;
+  --text-shadow: 0 1px 2px rgba(0, 50, 120, 0.65);
+}
+.btn.green {
+  /* greenpill.png */
+  --rim-top: #009c00;
+  --hi: #fbfdfb;
+  --base: #48c215;
+  --glow: #cbf78e;
+  --rim-bottom: #a0f12f;
+  --text: #fff;
+  --text-shadow: 0 1px 2px rgba(0, 70, 0, 0.65);
+}
+.btn.orange {
+  /* orangepill.png */
+  --rim-top: #ff9336;
+  --hi: #fffdfc;
+  --base: #ffa533;
+  --glow: #ffda8e;
+  --rim-bottom: #ffba2f;
+  --text: #fff;
+  --text-shadow: 0 1px 2px rgba(130, 50, 0, 0.7);
+}
+.btn:hover {
+  filter: brightness(1.06) saturate(1.15);
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--glow) 70%, white),
+    0 1px 2px rgba(0, 40, 60, 0.25);
+}
+.btn:active {
+  filter: brightness(0.92);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow:
+    var(--focus-glow),
+    0 1px 2px rgba(0, 40, 60, 0.25);
+}
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  filter: grayscale(0.85);
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* ---- Universal orb ----------------------------------------------------------
+   A pure-CSS copy of the orb artwork (blueicon.png and friends), sampled from
+   the images: a dark rim, a glossy highlight that is brightest at the top and
+   fades out by half-way down, and a body that glows brightest low down
+   (~77%) and darkens towards the sides. Content (an SVG glyph, a number) sits
+   on top in white. Any size; colour comes from four variables.
+     .orb  blue (default) · .green · .orange · .red · .grey
+   The same recipe is used for toolbar icon buttons (button.tool > svg). */
+.orb,
+button.tool > svg {
+  /* blueicon.png */
+  --rim: #0077ff;
+  --edge: #1088ff;
+  --base: #12a4ff;
+  --glow: #00c7ff;
+  border-radius: 50%;
+  color: #fff;
+  background:
+    /* rim */
+    radial-gradient(circle closest-side, transparent 83%, var(--rim) 93%),
+    /* gloss: brighter at the top of the cap… */
+    radial-gradient(ellipse 33% 14% at 50% 15%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 100%),
+    /* …inside an elliptical cap with a soft lower edge */
+    radial-gradient(ellipse 39% 24% at 50% 29%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.22) 80%, rgba(255, 255, 255, 0) 100%),
+    /* body */
+    radial-gradient(circle at 50% 77%, var(--glow), var(--base) 30%, var(--edge) 52%);
+  box-shadow: 0 1px 2px rgba(0, 30, 60, 0.35);
+}
+.orb {
+  display: inline-grid;
+  place-items: center;
+}
+.orb.green,
+button.tool.pressed > svg {
+  /* greenicon.png */
+  --rim: #009c00;
+  --edge: #20ab15;
+  --base: #58c826;
+  --glow: #9ef02e;
+}
+.orb.orange {
+  /* orangeicon.png */
+  --rim: #ff9336;
+  --edge: #ff9e42;
+  --base: #ffab41;
+  --glow: #ffba2f;
+}
+.orb.red {
+  /* same recipe, red */
+  --rim: #c4160d;
+  --edge: #dc2a1c;
+  --base: #f0442f;
+  --glow: #ff7d52;
+}
+.orb.grey {
+  /* same recipe, grey */
+  --rim: #868c93;
+  --edge: #9aa1a8;
+  --base: #b3b9bf;
+  --glow: #dce1e5;
+}
+.orb > svg,
+button.tool > svg {
+  filter: drop-shadow(0 1px 1px rgba(0, 30, 60, 0.55));
+}
+
+/* Round orb buttons (call controls) */
+button.orb {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  transition: filter 0.15s;
+}
+button.orb:hover {
+  filter: brightness(1.1) drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+}
+button.orb:active {
+  filter: brightness(0.9);
+}
+button.orb:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+/* Unstyled button for custom clickable areas */
+button.bare {
+  all: unset;
+  cursor: pointer;
+}
+button.bare:focus-visible {
+  box-shadow: var(--focus-glow);
+}
+
+/* Icon buttons for toolbars: the glyph sits on a CSS orb (see .orb above),
+   with an optional label underneath. `.pressed` (e.g. Bold on) turns it green. */
+button.tool {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 2px 4px;
+  border: none;
+  background: none;
+  color: var(--ink);
+  transition: filter 0.15s;
+}
+button.tool > svg {
+  box-sizing: content-box;
+  padding: 0.38em;
+}
+button.tool:hover {
+  filter: brightness(1.1) drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+}
+button.tool:active {
+  filter: brightness(0.9);
+}
+button.tool:disabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+button.tool:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-glow);
+  border-radius: 6px;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+/* svelte-sonner toasts, glass style */
+[data-sonner-toast][data-styled='true'] {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid #fff !important;
+  box-shadow: 0 4px 16px rgba(0, 80, 90, 0.3) !important;
+  color: var(--ink) !important;
+}
+[data-sonner-toast] [data-button] {
+  /* Same recipe as .btn.blue; sonner styles its own button, hence !important. */
+  height: 24px !important;
+  padding: 0 14px !important;
+  border: 1px solid transparent !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(180deg, #fbfdff 2%, #009bff 43%, #009bff 48%, #75e1ff 96%) padding-box,
+    linear-gradient(180deg, #0077ff, #009bff 50%, #00c8ff) border-box !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 50, 120, 0.65);
+}
+
+@keyframes shake {
+  0%, 100% { translate: 0 0; }
+  10%, 50%, 90% { translate: -10px 2px; }
+  30%, 70% { translate: 10px -2px; }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring, var(--orb-green)) 70%, transparent); }
+  100% { box-shadow: 0 0 0 14px transparent; }
+}
