@@ -1,6 +1,6 @@
 {
   "name": "tunnelweb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Frutiger Aero messenger in your browser: chat, chatrooms, files and group calls, peer-to-peer with one npx command.",
   "type": "module",
   "license": "MIT",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "open": "^11.0.4",
-    "p2p-tunnel": "^0.1.12",
+    "p2p-tunnel": "^0.1.14",
     "sirv": "^3.0.2",
     "ws": "^8.23.0"
   },
