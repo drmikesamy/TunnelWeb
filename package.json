@@ -4,6 +4,10 @@
   "description": "A Frutiger Aero messenger in your browser: chat, chatrooms, files and group calls, peer-to-peer with one npx command.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drmikesamy/tunnelweb.git"
+  },
   "bin": {
     "tunnelweb": "server/cli.js"
   },
