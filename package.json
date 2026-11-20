@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/drmikesamy/tunnelweb.git"
+    "url": "git+https://github.com/drmikesamy/TunnelWeb.git"
   },
   "bin": {
     "tunnelweb": "server/cli.js"
